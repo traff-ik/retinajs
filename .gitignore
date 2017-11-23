@@ -7,4 +7,5 @@ test/functional/public/retina.*
 node_modules
 es/
 flow-typed
-dev
+
+*\.iml
