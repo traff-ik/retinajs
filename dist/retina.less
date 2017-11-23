@@ -19,7 +19,7 @@
  */
 .retina(@path, @cap: 2, @size: auto auto, @extras: ~'') {
   @lowretina: ~"(-webkit-min-device-pixel-ratio: 1.5), (min--moz-device-pixel-ratio: 1.5), (-o-min-device-pixel-ratio: 3/2), (min-resolution: 1.5dppx)";
-  @2xpath: ~`@{path}.replace(/\.\w+$/, function(match) { return "@2x" + match; })`;
+  @2xpath: replace("@{path}", "(\.\w+)$", "@2x$1"); // less >= 1.7.0
 
   /*
    * Set a base background for 1x environments.
@@ -41,16 +41,15 @@
    */
   .create-queries() when (@cap >= 2) {
     .loop(@env) when (@env <= @cap) {
-      @retinapath: ~`@{path}.replace(/\.\w+$/, function(match) { return "@@{env}x" + match; })`;
+      @retinapath: replace("@{path}", "(\.\w+)$", "@@{env}x$1"); // less >= 1.7.0
       @media (-webkit-min-device-pixel-ratio: @env),
-             (min-resolution: @env * 96dpi) {
-               background      : url(@retinapath) @extras;
-               background-size : @size;
+      (min-resolution: @env * 96dpi) {
+        background      : url(@retinapath) @extras;
+        background-size : @size;
       }
       .loop((@env + 1));    // next iteration
     }
     .loop(2);
   }
   .create-queries();
-
 }
